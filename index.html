@@ -428,30 +428,38 @@ async function analyzeVideo() {
 
   let message = "";
 
+   let hookScore = getHookScore(duration, sceneChanges);
+  let visualScore = getVisualScore(width, height);
+  let storyScore = getStoryScore(duration, sceneChanges);
+
+  let message = "";
+
   if (score >= 85) {
 
     message =
-      "This Reel has a strong basic structure. " +
-      "Its length, vertical format and pacing are suitable " +
-      "for short-form content. Focus next on making the first " +
-      "1–3 seconds extremely attention-grabbing.";
+      "🔥 Strong Reel structure. Your video has good pacing and format. " +
+      "Your next focus should be making the first 1–3 seconds even more attention-grabbing.";
 
   } else if (score >= 70) {
 
     message =
-      "This Reel has a decent structure. " +
-      "Try improving the opening hook and removing any " +
-      "unnecessary pauses. Faster visual changes may also " +
-      "help maintain attention.";
+      "👍 Good Reel structure, but there is room to improve. " +
+      "Strengthen the opening hook and remove unnecessary slow moments " +
+      "so viewers have a reason to keep watching.";
 
   } else {
 
     message =
-      "The basic structure could be improved. " +
-      "Consider making the opening more interesting, " +
-      "reducing slow sections and keeping the story moving.";
+      "⚠️ The basic structure could be improved. " +
+      "Make the opening more interesting, reduce slow sections, " +
+      "and keep the story moving.";
 
   }
+
+  message +=
+    "\n\n🎣 Hook Score: " + hookScore + "/100" +
+    "\n🎨 Visual Score: " + visualScore + "/100" +
+    "\n📖 Story Score: " + storyScore + "/100";
 
 
   document.getElementById("analysisText").innerText =
@@ -520,7 +528,45 @@ function formatTime(seconds) {
 
 }
 
-</script>
+// V1.1 — Additional Reel Insights
+
+function getHookScore(duration, sceneChanges) {
+
+  let hookScore = 50;
+
+  if (duration <= 15) hookScore += 15;
+  if (sceneChanges >= 1) hookScore += 10;
+  if (sceneChanges >= 3) hookScore += 10;
+  if (duration > 30) hookScore -= 10;
+
+  return Math.max(0, Math.min(100, hookScore));
+
+}
+
+
+function getVisualScore(width, height) {
+
+  let visualScore = 60;
+
+  if (height > width) visualScore += 20;
+  if (width === height) visualScore += 10;
+
+  return Math.max(0, Math.min(100, visualScore));
+
+}
+
+
+function getStoryScore(duration, sceneChanges) {
+
+  let storyScore = 55;
+
+  if (duration >= 8 && duration <= 30) storyScore += 15;
+  if (sceneChanges >= 1) storyScore += 10;
+  if (sceneChanges >= 3) storyScore += 10;
+
+  return Math.max(0, Math.min(100, storyScore));
+
+}   </script>
 
 </body>
 </html>
