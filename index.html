@@ -1,362 +1,559 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>Reel Analyzer V1.1</title>
+<title>Reel Analyzer V2</title>
 
-  <style>
+<style>
+* {
+  box-sizing: border-box;
+}
 
-    * {
-      box-sizing: border-box;
-    }
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #0d0d12;
+  color: #fff;
+}
 
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #0f0f14;
-      color: white;
-    }
+.container {
+  max-width: 1050px;
+  margin: auto;
+  padding: 30px 18px 70px;
+}
 
-    .container {
-      max-width: 950px;
-      margin: auto;
-      padding: 35px 20px 60px;
-    }
+h1 {
+  text-align: center;
+  font-size: 44px;
+  margin-bottom: 8px;
+}
 
-    h1 {
-      text-align: center;
-      font-size: 42px;
-      margin-bottom: 10px;
-    }
+.subtitle {
+  text-align: center;
+  color: #999;
+  margin-bottom: 30px;
+}
 
-    .subtitle {
-      text-align: center;
-      color: #aaa;
-      margin-bottom: 35px;
-    }
+.section {
+  background: #17171f;
+  border-radius: 18px;
+  padding: 25px;
+  margin-top: 20px;
+}
 
-    .upload-box {
-      border: 2px dashed #555;
-      border-radius: 20px;
-      padding: 40px 20px;
-      text-align: center;
-      background: #181820;
-    }
+.section h2 {
+  margin-top: 0;
+}
 
-    input[type="file"] {
-      margin: 20px 0;
-      color: white;
-      max-width: 100%;
-    }
+label {
+  display: block;
+  margin: 18px 0 8px;
+  font-weight: bold;
+}
 
-    button {
-      background: white;
-      color: #111;
-      border: none;
-      padding: 14px 25px;
-      border-radius: 10px;
-      font-size: 16px;
-      font-weight: bold;
-      cursor: pointer;
-    }
+textarea,
+select,
+input[type="text"] {
+  width: 100%;
+  background: #0e0e14;
+  color: white;
+  border: 1px solid #3a3a45;
+  border-radius: 10px;
+  padding: 13px;
+  font-size: 15px;
+  resize: vertical;
+}
 
-    button:hover {
-      opacity: 0.85;
-    }
+textarea {
+  min-height: 100px;
+}
 
-    video {
-      display: none;
-      width: 100%;
-      max-height: 450px;
-      margin-top: 25px;
-      border-radius: 15px;
-      background: black;
-    }
+textarea:focus,
+select:focus,
+input:focus {
+  outline: none;
+  border-color: #fff;
+}
 
-    #status {
-      text-align: center;
-      color: #aaa;
-      margin-top: 15px;
-    }
+.upload-box {
+  border: 2px dashed #555;
+  border-radius: 18px;
+  padding: 35px 20px;
+  text-align: center;
+  background: #17171f;
+}
 
-    .results {
-      display: none;
-      margin-top: 30px;
-    }
+input[type="file"] {
+  margin: 18px 0;
+  max-width: 100%;
+}
 
-    .score {
-      text-align: center;
-      background: #181820;
-      padding: 30px;
-      border-radius: 20px;
-      margin-bottom: 20px;
-    }
+button {
+  background: white;
+  color: #111;
+  border: none;
+  padding: 14px 24px;
+  border-radius: 10px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+}
 
-    .score-label {
-      color: #aaa;
-      font-size: 18px;
-    }
+button:hover {
+  opacity: .85;
+}
 
-    .score-number {
-      font-size: 70px;
-      font-weight: bold;
-      margin: 5px 0;
-    }
+.analyze-btn {
+  width: 100%;
+  margin-top: 25px;
+  font-size: 18px;
+}
 
-    .score-description {
-      color: #bbb;
-    }
+video {
+  display: none;
+  width: 100%;
+  max-height: 500px;
+  margin-top: 20px;
+  border-radius: 15px;
+  background: black;
+}
 
-    .cards {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
-      gap: 15px;
-    }
+#status {
+  text-align: center;
+  color: #aaa;
+  margin-top: 15px;
+}
 
-    .card {
-      background: #181820;
-      padding: 20px;
-      border-radius: 15px;
-    }
+.results {
+  display: none;
+  margin-top: 30px;
+}
 
-    .card h3 {
-      margin-top: 0;
-      font-size: 17px;
-    }
+.score {
+  background: #17171f;
+  border-radius: 20px;
+  padding: 30px;
+  text-align: center;
+}
 
-    .value {
-      font-size: 28px;
-      font-weight: bold;
-    }
+.score-label {
+  color: #aaa;
+  font-size: 18px;
+}
 
-    .rating {
-      color: #aaa;
-      margin-top: 7px;
-      font-size: 14px;
-    }
+.score-number {
+  font-size: 72px;
+  font-weight: bold;
+  margin: 8px 0;
+}
 
-    .tip {
-      background: #181820;
-      padding: 25px;
-      border-radius: 15px;
-      margin-top: 20px;
-      line-height: 1.6;
-    }
+.score-description {
+  color: #bbb;
+  font-size: 16px;
+}
 
-    .tip h2 {
-      margin-top: 0;
-    }
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: 15px;
+  margin-top: 20px;
+}
 
-    .recommendations {
-      background: #181820;
-      padding: 25px;
-      border-radius: 15px;
-      margin-top: 20px;
-    }
+.card {
+  background: #17171f;
+  padding: 20px;
+  border-radius: 15px;
+}
 
-    .recommendations li {
-      margin-bottom: 10px;
-    }
+.card h3 {
+  margin-top: 0;
+}
 
-    .small {
-      color: #888;
-      font-size: 13px;
-      text-align: center;
-      margin-top: 25px;
-    }
+.value {
+  font-size: 30px;
+  font-weight: bold;
+}
 
-  </style>
+.rating {
+  color: #aaa;
+  margin-top: 7px;
+}
 
+.verdict {
+  background: #17171f;
+  padding: 25px;
+  border-radius: 16px;
+  margin-top: 20px;
+  line-height: 1.65;
+}
+
+.verdict h2 {
+  margin-top: 0;
+}
+
+.good {
+  border-left: 5px solid #48d597;
+}
+
+.bad {
+  border-left: 5px solid #ff5b5b;
+}
+
+.warning {
+  border-left: 5px solid #ffc857;
+}
+
+.item {
+  background: #101017;
+  border-radius: 12px;
+  padding: 16px;
+  margin: 12px 0;
+}
+
+.item strong {
+  display: block;
+  margin-bottom: 7px;
+}
+
+.priority {
+  font-size: 12px;
+  font-weight: bold;
+  text-transform: uppercase;
+  color: #aaa;
+}
+
+.script-box {
+  background: #101017;
+  border-radius: 12px;
+  padding: 20px;
+  white-space: pre-line;
+  line-height: 1.7;
+}
+
+.hook-option {
+  background: #101017;
+  padding: 15px;
+  border-radius: 10px;
+  margin: 10px 0;
+}
+
+.timestamp {
+  font-family: monospace;
+  color: #aaa;
+}
+
+.small {
+  color: #777;
+  text-align: center;
+  font-size: 13px;
+  margin-top: 30px;
+}
+
+.hidden {
+  display: none;
+}
+</style>
 </head>
 
 <body>
 
 <div class="container">
 
-  <h1>🎬 Reel Analyzer</h1>
+<h1>🎬 Reel Analyzer V2</h1>
 
-  <p class="subtitle">
-    Upload your Reel and get a basic performance analysis.
-  </p>
+<p class="subtitle">
+Honest Reel analysis — problems, fixes, scripts and creative direction.
+</p>
 
-  <div class="upload-box">
 
-    <h2>Upload your Reel</h2>
+<!-- =========================
+     VIDEO
+========================= -->
 
-    <p>MP4, MOV or WebM</p>
+<div class="upload-box">
 
-    <input
-      type="file"
-      id="videoInput"
-      accept="video/*"
-    >
+<h2>🎥 Upload Your Reel</h2>
 
-    <br>
+<p>MP4, MOV or WebM</p>
 
-    <button onclick="analyzeVideo()">
-      Analyze Reel
-    </button>
+<input
+  type="file"
+  id="videoInput"
+  accept="video/*"
+>
 
-    <p id="status"></p>
+<p id="status"></p>
 
-  </div>
+</div>
 
-  <video id="video" controls></video>
+<video id="video" controls></video>
 
 
-  <div class="results" id="results">
+<!-- =========================
+     CREATOR CONTEXT
+========================= -->
 
-    <div class="score">
+<div class="section">
 
-      <div class="score-label">
-        Your Reel Score
-      </div>
+<h2>🧠 Tell the Analyzer About Your Reel</h2>
 
-      <div class="score-number" id="overallScore">
-        --
-      </div>
+<p style="color:#999;">
+The more context you provide, the more useful the creative feedback becomes.
+</p>
 
-      <div class="score-description" id="scoreDescription">
-        --
-      </div>
+<label>
+🎬 What happens in the video?
+</label>
 
-    </div>
+<textarea
+  id="videoDescription"
+  placeholder="Example: I enter the gym, show my current physique, then reveal the transformation after 30 days. At the end I show the result."
+></textarea>
 
 
-    <div class="cards">
+<label>
+🗣️ Script / Voiceover / Dialogue
+</label>
 
-      <div class="card">
+<textarea
+  id="scriptInput"
+  placeholder="Paste exactly what is spoken in the Reel. If there is no speech, leave this blank."
+></textarea>
 
-        <h3>🎣 Hook</h3>
 
-        <div class="value" id="hookScore">
-          --
-        </div>
+<label>
+🎯 What is the goal of this Reel?
+</label>
 
-        <div class="rating" id="hookRating">
-          --
-        </div>
+<select id="goalInput">
 
-      </div>
+<option value="entertainment">Entertainment</option>
+<option value="education">Education</option>
+<option value="story">Tell a story</option>
+<option value="transformation">Transformation / Before & After</option>
+<option value="product">Sell / Promote a product</option>
+<option value="personal">Personal brand</option>
+<option value="viral">Maximize viral potential</option>
 
+</select>
 
-      <div class="card">
 
-        <h3>🎨 Visual</h3>
+<label>
+👥 Target audience
+</label>
 
-        <div class="value" id="visualScore">
-          --
-        </div>
+<input
+  type="text"
+  id="audienceInput"
+  placeholder="Example: beginners interested in fitness"
+/>
 
-        <div class="rating" id="visualRating">
-          --
-        </div>
 
-      </div>
+<label>
+🔥 What should viewers feel or do?
+</label>
 
+<textarea
+  id="desiredReaction"
+  placeholder="Example: I want viewers to be surprised and watch until the transformation."
+></textarea>
 
-      <div class="card">
 
-        <h3>📖 Story</h3>
+<button
+  class="analyze-btn"
+  onclick="analyzeVideo()"
+>
+Analyze My Reel
+</button>
 
-        <div class="value" id="storyScore">
-          --
-        </div>
+</div>
 
-        <div class="rating" id="storyRating">
-          --
-        </div>
 
-      </div>
+<!-- =========================
+     RESULTS
+========================= -->
 
+<div class="results" id="results">
 
-      <div class="card">
 
-        <h3>⚡ Pacing</h3>
+<div class="score">
 
-        <div class="value" id="pacingScore">
-          --
-        </div>
+<div class="score-label">
+Honest Reel Score
+</div>
 
-        <div class="rating" id="pacingRating">
-          --
-        </div>
+<div class="score-number" id="overallScore">
+--
+</div>
 
-      </div>
+<div class="score-description" id="scoreDescription">
+--
+</div>
 
+</div>
 
-      <div class="card">
 
-        <h3>⏱️ Duration</h3>
+<!-- SCORES -->
 
-        <div class="value" id="duration">
-          --
-        </div>
+<div class="cards">
 
-        <div class="rating">
-          Video length
-        </div>
+<div class="card">
+<h3>🎣 Hook</h3>
+<div class="value" id="hookScore">--</div>
+<div class="rating" id="hookRating">--</div>
+</div>
 
-      </div>
+<div class="card">
+<h3>🎨 Visual</h3>
+<div class="value" id="visualScore">--</div>
+<div class="rating" id="visualRating">--</div>
+</div>
 
+<div class="card">
+<h3>📖 Story</h3>
+<div class="value" id="storyScore">--</div>
+<div class="rating" id="storyRating">--</div>
+</div>
 
-      <div class="card">
+<div class="card">
+<h3>⚡ Pacing</h3>
+<div class="value" id="pacingScore">--</div>
+<div class="rating" id="pacingRating">--</div>
+</div>
 
-        <h3>🎬 Scene Changes</h3>
+<div class="card">
+<h3>🗣️ Script</h3>
+<div class="value" id="scriptScore">--</div>
+<div class="rating" id="scriptRating">--</div>
+</div>
 
-        <div class="value" id="sceneChanges">
-          --
-        </div>
+<div class="card">
+<h3>🎯 Clarity</h3>
+<div class="value" id="clarityScore">--</div>
+<div class="rating" id="clarityRating">--</div>
+</div>
 
-        <div class="rating">
-          Detected changes
-        </div>
+<div class="card">
+<h3>⏱️ Duration</h3>
+<div class="value" id="duration">--</div>
+<div class="rating">Video length</div>
+</div>
 
-      </div>
+<div class="card">
+<h3>🎬 Scene Changes</h3>
+<div class="value" id="sceneChanges">--</div>
+<div class="rating">Detected changes</div>
+</div>
 
+<div class="card">
+<h3>📱 Format</h3>
+<div class="value" id="format">--</div>
+<div class="rating">Mobile suitability</div>
+</div>
 
-      <div class="card">
+</div>
 
-        <h3>📱 Format</h3>
 
-        <div class="value" id="format">
-          --
-        </div>
+<!-- HUMAN VERDICT -->
 
-        <div class="rating">
-          Aspect ratio
-        </div>
+<div class="verdict warning">
 
-      </div>
+<h2>🧠 Human-Style Verdict</h2>
 
-    </div>
+<p id="humanVerdict"></p>
 
+</div>
 
-    <div class="tip">
 
-      <h2>💡 Analysis</h2>
+<!-- WHAT IS GOOD -->
 
-      <p id="analysisText"></p>
+<div class="verdict good">
 
-    </div>
+<h2>🟢 What You Should KEEP</h2>
 
+<div id="keepList"></div>
 
-    <div class="recommendations">
+</div>
 
-      <h2>🚀 How to Improve</h2>
 
-      <ul id="recommendationList"></ul>
+<!-- WHAT IS BAD -->
 
-    </div>
+<div class="verdict bad">
 
-    <p class="small">
-      V1.1 uses browser-based video analysis. Results are estimates,
-      not predictions of actual Instagram performance.
-    </p>
+<h2>🔴 What Is Actually Hurting This Reel</h2>
 
-  </div>
+<div id="problemList"></div>
+
+</div>
+
+
+<!-- EXACT FIXES -->
+
+<div class="verdict">
+
+<h2>🔧 Exact Fixes</h2>
+
+<div id="fixList"></div>
+
+</div>
+
+
+<!-- REPLACEMENT SCRIPT -->
+
+<div class="verdict">
+
+<h2>✍️ Suggested Replacement Script</h2>
+
+<div
+  class="script-box"
+  id="replacementScript"
+></div>
+
+</div>
+
+
+<!-- SHOT STRUCTURE -->
+
+<div class="verdict">
+
+<h2>🎬 Improved Reel Structure</h2>
+
+<div id="improvedStructure"></div>
+
+</div>
+
+
+<!-- HOOKS -->
+
+<div class="verdict">
+
+<h2>🔥 Alternative Hooks</h2>
+
+<div id="hookOptions"></div>
+
+</div>
+
+
+<!-- ONE THING -->
+
+<div class="verdict bad">
+
+<h2>🎯 If You Change Only ONE Thing</h2>
+
+<p id="oneThing"></p>
+
+</div>
+
+
+</div>
+
+
+<p class="small">
+V2 uses browser-based video signals plus creator-provided context.
+It does not predict Instagram distribution and does not replace real audience data.
+</p>
 
 </div>
 
@@ -366,33 +563,35 @@
 let selectedVideo = null;
 
 
-/* -----------------------------
+/* =========================================
    FILE SELECTION
------------------------------ */
+========================================= */
 
 document
-  .getElementById("videoInput")
-  .addEventListener("change", function(event) {
+.getElementById("videoInput")
+.addEventListener("change", function(event) {
 
-    selectedVideo = event.target.files[0];
+  selectedVideo = event.target.files[0];
 
-    if (!selectedVideo) return;
+  if (!selectedVideo) return;
 
-    const video = document.getElementById("video");
+  const video =
+    document.getElementById("video");
 
-    video.src = URL.createObjectURL(selectedVideo);
+  video.src =
+    URL.createObjectURL(selectedVideo);
 
-    video.style.display = "block";
+  video.style.display = "block";
 
-    document.getElementById("status").innerText =
-      "Video selected: " + selectedVideo.name;
+  document.getElementById("status").innerText =
+    "Video selected: " + selectedVideo.name;
 
-  });
+});
 
 
-/* -----------------------------
+/* =========================================
    MAIN ANALYZER
------------------------------ */
+========================================= */
 
 async function analyzeVideo() {
 
@@ -404,38 +603,74 @@ async function analyzeVideo() {
 
   }
 
-  const video = document.getElementById("video");
+  const video =
+    document.getElementById("video");
 
-  const status = document.getElementById("status");
+  const status =
+    document.getElementById("status");
 
   status.innerText =
-    "Analyzing your Reel...";
-
-  video.currentTime = 0;
+    "Analyzing video structure...";
 
   await waitForVideoMetadata(video);
 
+  video.currentTime = 0;
 
-  const duration = video.duration;
+  const duration =
+    video.duration;
 
-  const width = video.videoWidth;
+  const width =
+    video.videoWidth;
 
-  const height = video.videoHeight;
+  const height =
+    video.videoHeight;
 
 
-  /* Duration */
+  /* USER INPUT */
+
+  const description =
+    document
+      .getElementById("videoDescription")
+      .value
+      .trim();
+
+  const script =
+    document
+      .getElementById("scriptInput")
+      .value
+      .trim();
+
+  const goal =
+    document
+      .getElementById("goalInput")
+      .value;
+
+  const audience =
+    document
+      .getElementById("audienceInput")
+      .value
+      .trim();
+
+  const desiredReaction =
+    document
+      .getElementById("desiredReaction")
+      .value
+      .trim();
+
+
+  /* =========================================
+     TECHNICAL ANALYSIS
+  ========================================= */
 
   document.getElementById("duration").innerText =
     formatTime(duration);
 
 
-  /* Format */
-
   let format = "Landscape";
 
   if (height > width) {
 
-    format = "Vertical ✅";
+    format = "Vertical 9:16";
 
   }
 
@@ -449,157 +684,228 @@ async function analyzeVideo() {
     format;
 
 
-  /* Frame analysis */
+  status.innerText =
+    "Detecting scene changes...";
+
 
   const sceneChanges =
-    await detectSceneChanges(video, duration);
-
+    await detectSceneChanges(
+      video,
+      duration
+    );
 
   document.getElementById("sceneChanges").innerText =
     sceneChanges;
 
 
-  /* Pacing */
+  /* =========================================
+     PACING
+  ========================================= */
 
   const averageShot =
     duration /
     Math.max(1, sceneChanges + 1);
 
+  let pacingScore;
+  let pacingText;
 
-  let pacingScore = 50;
+  if (averageShot < 1.5) {
 
-  let pacingText = "Slow";
+    pacingScore = 82;
+    pacingText = "Very fast — check if it feels chaotic";
 
+  }
 
-  if (averageShot < 2) {
+  else if (averageShot < 2.5) {
 
     pacingScore = 92;
-
-    pacingText = "Very Fast 🔥";
+    pacingText = "Fast and attention-friendly";
 
   }
 
   else if (averageShot < 4) {
 
     pacingScore = 84;
-
-    pacingText = "Fast ⚡";
+    pacingText = "Good";
 
   }
 
-  else if (averageShot < 7) {
+  else if (averageShot < 6) {
 
-    pacingScore = 72;
+    pacingScore = 70;
+    pacingText = "Moderate";
 
-    pacingText = "Medium";
+  }
+
+  else if (averageShot < 9) {
+
+    pacingScore = 55;
+    pacingText = "Slow";
 
   }
 
   else {
 
-    pacingScore = 55;
-
-    pacingText = "Slow";
-
-  }
-
-
-  /* Hook */
-
-  let hookScore = 55;
-
-
-  if (duration <= 15) {
-
-    hookScore += 15;
-
-  }
-
-  else if (duration <= 30) {
-
-    hookScore += 8;
+    pacingScore = 40;
+    pacingText = "Very slow";
 
   }
 
 
-  if (sceneChanges >= 1) {
+  /* =========================================
+     HOOK
+  ========================================= */
 
+  let hookScore = 50;
+
+  if (duration <= 15)
     hookScore += 10;
 
-  }
+  else if (duration <= 30)
+    hookScore += 5;
 
+  if (sceneChanges >= 1)
+    hookScore += 7;
 
-  if (sceneChanges >= 3) {
-
+  if (sceneChanges >= 3)
     hookScore += 8;
 
-  }
+  if (description.length > 30)
+    hookScore += 5;
+
+  if (script.length > 20)
+    hookScore += 5;
 
 
   hookScore =
     Math.min(100, hookScore);
 
 
-  /* Visual */
+  /* =========================================
+     VISUAL
+  ========================================= */
 
-  let visualScore = 60;
+  let visualScore = 55;
 
+  if (height > width)
+    visualScore += 25;
 
-  if (height > width) {
-
-    visualScore += 20;
-
-  }
-
-  else if (width === height) {
-
+  else if (width === height)
     visualScore += 10;
 
-  }
-
-
-  if (width >= 720) {
-
+  if (width >= 720)
     visualScore += 10;
 
-  }
+  if (sceneChanges >= 2)
+    visualScore += 5;
 
 
   visualScore =
     Math.min(100, visualScore);
 
 
-  /* Story */
+  /* =========================================
+     STORY
+  ========================================= */
 
-  let storyScore = 55;
+  let storyScore = 50;
 
-
-  if (duration >= 8 && duration <= 30) {
-
+  if (description.length >= 50)
     storyScore += 15;
 
-  }
-
-
-  if (sceneChanges >= 1) {
-
+  if (duration >= 8 && duration <= 45)
     storyScore += 10;
 
-  }
+  if (sceneChanges >= 1)
+    storyScore += 8;
 
-
-  if (sceneChanges >= 3) {
-
+  if (script.length >= 50)
     storyScore += 10;
-
-  }
 
 
   storyScore =
     Math.min(100, storyScore);
 
 
-  /* Overall */
+  /* =========================================
+     SCRIPT
+  ========================================= */
+
+  let scriptScore = 50;
+
+  if (script.length === 0) {
+
+    scriptScore = 55;
+
+  }
+
+  else {
+
+    const words =
+      script.split(/\s+/).filter(Boolean);
+
+    const wordCount =
+      words.length;
+
+    if (wordCount > 5)
+      scriptScore += 5;
+
+    if (wordCount > 15)
+      scriptScore += 5;
+
+    if (wordCount > 30)
+      scriptScore += 5;
+
+    if (wordCount > 80)
+      scriptScore -= 15;
+
+    if (script.includes("?"))
+      scriptScore += 5;
+
+    if (
+      script.includes("you") ||
+      script.includes("your")
+    )
+      scriptScore += 5;
+
+  }
+
+  scriptScore =
+    Math.max(
+      30,
+      Math.min(100, scriptScore)
+    );
+
+
+  /* =========================================
+     CLARITY
+  ========================================= */
+
+  let clarityScore = 45;
+
+  if (description.length >= 50)
+    clarityScore += 20;
+
+  if (goal)
+    clarityScore += 10;
+
+  if (audience.length >= 5)
+    clarityScore += 10;
+
+  if (desiredReaction.length >= 10)
+    clarityScore += 10;
+
+  if (script.length >= 20)
+    clarityScore += 5;
+
+
+  clarityScore =
+    Math.min(100, clarityScore);
+
+
+  /* =========================================
+     OVERALL
+  ========================================= */
 
   const overallScore =
     Math.round(
@@ -607,235 +913,767 @@ async function analyzeVideo() {
         hookScore +
         visualScore +
         storyScore +
-        pacingScore
-      ) / 4
+        pacingScore +
+        scriptScore +
+        clarityScore
+      ) / 6
     );
 
 
-  /* Display scores */
+  /* =========================================
+     DISPLAY
+  ========================================= */
 
-  document.getElementById("overallScore").innerText =
-    overallScore + "/100";
+  setText(
+    "overallScore",
+    overallScore + "/100"
+  );
+
+  setText(
+    "hookScore",
+    hookScore + "/100"
+  );
+
+  setText(
+    "visualScore",
+    visualScore + "/100"
+  );
+
+  setText(
+    "storyScore",
+    storyScore + "/100"
+  );
+
+  setText(
+    "pacingScore",
+    pacingScore + "/100"
+  );
+
+  setText(
+    "scriptScore",
+    scriptScore + "/100"
+  );
+
+  setText(
+    "clarityScore",
+    clarityScore + "/100"
+  );
 
 
-  document.getElementById("hookScore").innerText =
-    hookScore + "/100";
+  setText(
+    "hookRating",
+    getRating(hookScore)
+  );
+
+  setText(
+    "visualRating",
+    getRating(visualScore)
+  );
+
+  setText(
+    "storyRating",
+    getRating(storyScore)
+  );
+
+  setText(
+    "pacingRating",
+    pacingText
+  );
+
+  setText(
+    "scriptRating",
+    getRating(scriptScore)
+  );
+
+  setText(
+    "clarityRating",
+    getRating(clarityScore)
+  );
 
 
-  document.getElementById("visualScore").innerText =
-    visualScore + "/100";
+  /* =========================================
+     SCORE DESCRIPTION
+  ========================================= */
 
-
-  document.getElementById("storyScore").innerText =
-    storyScore + "/100";
-
-
-  document.getElementById("pacingScore").innerText =
-    pacingScore + "/100";
-
-
-  document.getElementById("pacingRating").innerText =
-    pacingText;
-
-
-  document.getElementById("hookRating").innerText =
-    getRating(hookScore);
-
-
-  document.getElementById("visualRating").innerText =
-    getRating(visualScore);
-
-
-  document.getElementById("storyRating").innerText =
-    getRating(storyScore);
-
-
-  /* Overall description */
-
-  let description = "";
+  let descriptionText;
 
   if (overallScore >= 85) {
 
-    description =
-      "🔥 Strong structure with good short-form characteristics.";
+    descriptionText =
+      "Strong foundation. Now optimize the weakest specific moment.";
 
   }
 
   else if (overallScore >= 70) {
 
-    description =
-      "👍 Good foundation with several areas that can be improved.";
+    descriptionText =
+      "Decent Reel, but there are identifiable weaknesses worth fixing.";
+
+  }
+
+  else if (overallScore >= 55) {
+
+    descriptionText =
+      "The idea may work, but this version needs meaningful improvements.";
 
   }
 
   else {
 
-    description =
-      "⚠️ The basic structure needs improvement.";
+    descriptionText =
+      "I would revise this version before posting.";
+
+  }
+
+  setText(
+    "scoreDescription",
+    descriptionText
+  );
+
+
+  /* =========================================
+     HUMAN VERDICT
+  ========================================= */
+
+  let verdict = "";
+
+
+  if (hookScore < 65) {
+
+    verdict +=
+      "Honestly, the opening is the biggest concern. ";
+
+  }
+  else {
+
+    verdict +=
+      "The opening has a workable structure, but a good structure does not automatically mean a strong hook. ";
 
   }
 
 
-  document.getElementById("scoreDescription").innerText =
-    description;
+  if (pacingScore < 65) {
+
+    verdict +=
+      "The Reel appears too slow based on its shot structure. ";
+
+  }
+  else if (pacingScore > 88) {
+
+    verdict +=
+      "The pacing is fast, although extremely fast cutting should still be checked for clarity. ";
+
+  }
 
 
-  /* Analysis */
+  if (
+    description.length < 30 &&
+    script.length < 20
+  ) {
 
-  let message = "";
+    verdict +=
+      "The analyzer also has limited creative context, so the human-style judgment is necessarily conservative. ";
+
+  }
+
+
+  if (goal === "viral") {
+
+    verdict +=
+      "Because your goal is viral reach, the biggest priority should be immediate curiosity and a strong payoff.";
+
+  }
+  else {
+
+    verdict +=
+      "The next step should be improving the weakest part rather than blindly adding more cuts.";
+
+  }
+
+
+  setText(
+    "humanVerdict",
+    verdict
+  );
+
+
+  /* =========================================
+     KEEP
+  ========================================= */
+
+  const keep =
+    [];
+
+  if (visualScore >= 75) {
+
+    keep.push(
+      "The mobile-friendly visual format is worth keeping."
+    );
+
+  }
+
+  if (pacingScore >= 75) {
+
+    keep.push(
+      "The current pacing structure is reasonably strong. Don't add cuts just for the sake of adding cuts."
+    );
+
+  }
+
+  if (script.length > 20) {
+
+    keep.push(
+      "Keep the core idea of your existing script unless the wording itself is causing the problem."
+    );
+
+  }
+
+  if (sceneChanges >= 2) {
+
+    keep.push(
+      "There is enough visual change to avoid making the Reel completely static."
+    );
+
+  }
+
+  if (keep.length === 0) {
+
+    keep.push(
+      "There is not enough evidence to confidently identify a strong element yet. That is itself useful feedback — don't assume something is good just because the score looks acceptable."
+    );
+
+  }
+
+  renderItems(
+    "keepList",
+    keep
+  );
+
+
+  /* =========================================
+     PROBLEMS
+  ========================================= */
+
+  const problems =
+    [];
 
 
   if (hookScore < 70) {
 
-    message +=
-      "The opening may need a stronger reason for viewers to continue watching. ";
-
-  }
-
-  else {
-
-    message +=
-      "The Reel has a reasonably strong opening structure. ";
+    problems.push({
+      title: "Opening may not be strong enough",
+      text:
+        "The current structural signals don't give us enough evidence that the first seconds create immediate curiosity. If the Reel starts with setup before the interesting event, that is a likely scroll point.",
+      priority: "HIGH PRIORITY"
+    });
 
   }
 
 
   if (pacingScore < 70) {
 
-    message +=
-      "The video appears relatively slow, so consider removing pauses or unnecessary sections. ";
+    problems.push({
+      title: "The Reel may spend too long on individual shots",
+      text:
+        "Your average detected shot duration is about " +
+        averageShot.toFixed(1) +
+        " seconds. Look for pauses, repeated information and moments where nothing new happens.",
+      priority: "HIGH PRIORITY"
+    });
 
   }
 
-  else {
-
-    message +=
-      "The pacing is reasonably suited to short-form content. ";
-
-  }
-
-
-  if (visualScore >= 80) {
-
-    message +=
-      "The video format is well suited for mobile viewing.";
-
-  }
-
-  else {
-
-    message +=
-      "Consider using a vertical 9:16 format for mobile-first content.";
-
-  }
-
-
-  document.getElementById("analysisText").innerText =
-    message;
-
-
-  /* Recommendations */
-
-  const list =
-    document.getElementById("recommendationList");
-
-
-  list.innerHTML = "";
-
-
-  const recommendations = [];
-
-
-  if (hookScore < 75) {
-
-    recommendations.push(
-      "Make the first 1–2 seconds immediately interesting."
-    );
-
-  }
-
-  if (pacingScore < 75) {
-
-    recommendations.push(
-      "Remove slow pauses and unnecessary sections."
-    );
-
-  }
-
-  if (sceneChanges === 0) {
-
-    recommendations.push(
-      "Consider adding a visual change, movement, zoom, or cut to maintain attention."
-    );
-
-  }
 
   if (height <= width) {
 
-    recommendations.push(
-      "Consider using a vertical 9:16 format for Instagram Reels."
-    );
+    problems.push({
+      title: "Format is not vertical",
+      text:
+        "For Instagram Reels, a vertical 9:16 composition is usually the safer mobile-first choice.",
+      priority: "MEDIUM PRIORITY"
+    });
 
   }
 
-  recommendations.push(
-    "Make sure the main payoff or interesting moment happens early enough to encourage viewers to continue."
+
+  if (
+    description.length < 30
+  ) {
+
+    problems.push({
+      title: "The analyzer does not know enough about the actual story",
+      text:
+        "Describe what happens in the Reel. Otherwise the system can analyze structure but cannot reliably judge whether the story itself is interesting.",
+      priority: "MEDIUM PRIORITY"
+    });
+
+  }
+
+
+  if (
+    script.length > 100 &&
+    duration < 30
+  ) {
+
+    problems.push({
+      title: "The script may be too dense",
+      text:
+        "A large amount of spoken information inside a short Reel can make it feel rushed and difficult to follow.",
+      priority: "MEDIUM PRIORITY"
+    });
+
+  }
+
+
+  if (sceneChanges === 0) {
+
+    problems.push({
+      title: "There is almost no detected visual change",
+      text:
+        "That does not automatically make the Reel bad, but a completely static presentation needs especially strong delivery, framing or storytelling to hold attention.",
+      priority: "MEDIUM PRIORITY"
+    });
+
+  }
+
+
+  if (problems.length === 0) {
+
+    problems.push({
+      title: "No obvious structural failure detected",
+      text:
+        "That does not mean the Reel is guaranteed to perform. It means the available signals do not reveal a major technical weakness.",
+      priority: "LOW PRIORITY"
+    });
+
+  }
+
+
+  renderProblemItems(
+    "problemList",
+    problems
   );
 
 
-  recommendations.forEach(function(item) {
+  /* =========================================
+     EXACT FIXES
+  ========================================= */
 
-    const li =
-      document.createElement("li");
+  const fixes = [];
 
-    li.innerText = item;
 
-    list.appendChild(li);
+  if (hookScore < 70) {
+
+    fixes.push({
+      title: "Fix the first 1–2 seconds",
+      text:
+        "Move the most interesting visual, result, reaction or claim to the beginning. Put the explanation after the curiosity is created."
+    });
+
+  }
+
+
+  if (pacingScore < 70) {
+
+    fixes.push({
+      title: "Remove dead time",
+      text:
+        "Cut pauses, repeated actions and moments where the viewer learns nothing new. Don't simply speed up the entire video."
+    });
+
+  }
+
+
+  if (height <= width) {
+
+    fixes.push({
+      title: "Reframe for vertical viewing",
+      text:
+        "Use a 9:16 composition and keep important subjects/text away from the edges."
+    });
+
+  }
+
+
+  if (script.length > 100) {
+
+    fixes.push({
+      title: "Compress the wording",
+      text:
+        "Say the same thing with fewer words. Every sentence should either create curiosity, provide useful information or move the story forward."
+    });
+
+  }
+
+
+  if (description.length < 30) {
+
+    fixes.push({
+      title: "Give the analyzer more context",
+      text:
+        "Describe the actual sequence of events so future AI analysis can judge story logic rather than guessing."
+    });
+
+  }
+
+
+  fixes.push({
+    title: "Protect the payoff",
+    text:
+      "Make sure the most important result, reveal, joke or emotional moment is not buried after unnecessary setup."
+  });
+
+
+  renderFixItems(
+    "fixList",
+    fixes
+  );
+
+
+  /* =========================================
+     REPLACEMENT SCRIPT
+  ========================================= */
+
+  let replacement =
+    "";
+
+
+  if (script.length > 20) {
+
+    replacement =
+      "HOOK — 0:00–0:02\n" +
+      "Replace the current opening with the most surprising result or strongest claim.\n\n" +
+
+      "SETUP — 0:02–0:05\n" +
+      "Briefly explain what the viewer is about to see.\n\n" +
+
+      "VALUE / STORY — 0:05–0:" +
+      Math.max(8, Math.round(duration - 3)) +
+      "\n" +
+      "Show only the steps or information necessary to reach the payoff.\n\n" +
+
+      "PAYOFF — FINAL MOMENTS\n" +
+      "Deliver the result, reveal, joke or transformation clearly.\n\n" +
+
+      "IMPORTANT:\n" +
+      "Do not blindly replace your entire original script. Keep any line that already creates curiosity or emotion.";
+
+  }
+
+  else {
+
+    replacement =
+      "HOOK — 0:00–0:02\n" +
+      "\"I didn't expect THIS to happen...\"\n\n" +
+
+      "SETUP — 0:02–0:05\n" +
+      "\"Here's what happened.\"\n\n" +
+
+      "STORY / VALUE\n" +
+      "Show the shortest sequence that explains the situation.\n\n" +
+
+      "PAYOFF\n" +
+      "Show the most interesting result clearly.\n\n" +
+
+      "ENDING\n" +
+      "\"And that's the part I didn't expect.\"";
+
+  }
+
+
+  setText(
+    "replacementScript",
+    replacement
+  );
+
+
+  /* =========================================
+     IMPROVED STRUCTURE
+  ========================================= */
+
+  const structure =
+    document.getElementById(
+      "improvedStructure"
+    );
+
+  structure.innerHTML = "";
+
+
+  const structureItems = [
+
+    [
+      "0:00–0:02",
+      "HOOK",
+      "Start with the strongest visual, result, question or surprising claim."
+    ],
+
+    [
+      "0:02–0:05",
+      "CONTEXT",
+      "Give just enough information to make the viewer understand what is happening."
+    ],
+
+    [
+      "0:05–70%",
+      "VALUE / STORY",
+      "Move quickly through setup and progression. Remove anything that repeats the same idea."
+    ],
+
+    [
+      "70%–90%",
+      "PAYOFF",
+      "Deliver the promised result, reveal, joke or transformation."
+    ],
+
+    [
+      "FINAL MOMENTS",
+      "ENDING",
+      "Finish cleanly or create a natural loop."
+    ]
+
+  ];
+
+
+  structureItems.forEach(function(item) {
+
+    const div =
+      document.createElement("div");
+
+    div.className = "item";
+
+    div.innerHTML =
+      "<strong>" +
+      item[0] +
+      " — " +
+      item[1] +
+      "</strong>" +
+      item[2];
+
+    structure.appendChild(div);
 
   });
 
 
-  /* Show results */
+  /* =========================================
+     HOOK OPTIONS
+  ========================================= */
 
-  document.getElementById("results").style.display =
-    "block";
+  const hookOptions =
+    document.getElementById(
+      "hookOptions"
+    );
+
+  hookOptions.innerHTML = "";
+
+
+  const hooks = [
+
+    "“I didn't expect this to work...”",
+
+    "“Nobody warned me about this.”",
+
+    "“I tried this for the first time — and THIS happened.”",
+
+    "“Wait until you see what happens at the end.”",
+
+    "“I thought this would be easy. I was completely wrong.”"
+
+  ];
+
+
+  hooks.forEach(function(hook) {
+
+    const div =
+      document.createElement("div");
+
+    div.className =
+      "hook-option";
+
+    div.innerText =
+      hook;
+
+    hookOptions.appendChild(div);
+
+  });
+
+
+  /* =========================================
+     ONE THING
+  ========================================= */
+
+  let oneThing = "";
+
+
+  if (hookScore < 70) {
+
+    oneThing =
+      "Fix the opening. Start with the strongest moment instead of spending the first seconds explaining what the Reel is about.";
+
+  }
+
+  else if (pacingScore < 70) {
+
+    oneThing =
+      "Cut dead time. Find the longest moments where nothing new happens and remove them.";
+
+  }
+
+  else if (clarityScore < 70) {
+
+    oneThing =
+      "Make the viewer understand the premise immediately. They should not need to figure out what this Reel is about.";
+
+  }
+
+  else {
+
+    oneThing =
+      "Do not change everything. Keep the existing structure and test a stronger first 1–2 seconds against the current opening.";
+
+  }
+
+
+  setText(
+    "oneThing",
+    oneThing
+  );
+
+
+  /* =========================================
+     SHOW RESULTS
+  ========================================= */
+
+  document.getElementById(
+    "results"
+  ).style.display = "block";
 
 
   status.innerText =
-    "Analysis complete!";
+    "Analysis complete.";
 
 }
 
 
-/* -----------------------------
-   SCENE DETECTION
------------------------------ */
+/* =========================================
+   RENDER HELPERS
+========================================= */
 
-async function detectSceneChanges(video, duration) {
+function setText(id, value) {
+
+  document.getElementById(id).innerText =
+    value;
+
+}
+
+
+function renderItems(id, items) {
+
+  const container =
+    document.getElementById(id);
+
+  container.innerHTML = "";
+
+  items.forEach(function(item) {
+
+    const div =
+      document.createElement("div");
+
+    div.className = "item";
+
+    div.innerText = item;
+
+    container.appendChild(div);
+
+  });
+
+}
+
+
+function renderProblemItems(id, items) {
+
+  const container =
+    document.getElementById(id);
+
+  container.innerHTML = "";
+
+  items.forEach(function(item) {
+
+    const div =
+      document.createElement("div");
+
+    div.className = "item";
+
+    div.innerHTML =
+      '<div class="priority">' +
+      item.priority +
+      "</div>" +
+      "<strong>" +
+      item.title +
+      "</strong>" +
+      item.text;
+
+    container.appendChild(div);
+
+  });
+
+}
+
+
+function renderFixItems(id, items) {
+
+  const container =
+    document.getElementById(id);
+
+  container.innerHTML = "";
+
+  items.forEach(function(item) {
+
+    const div =
+      document.createElement("div");
+
+    div.className = "item";
+
+    div.innerHTML =
+      "<strong>" +
+      item.title +
+      "</strong>" +
+      item.text;
+
+    container.appendChild(div);
+
+  });
+
+}
+
+
+/* =========================================
+   SCENE DETECTION
+========================================= */
+
+async function detectSceneChanges(
+  video,
+  duration
+) {
 
   const canvas =
     document.createElement("canvas");
 
   canvas.width = 160;
-
   canvas.height = 160;
-
 
   const ctx =
     canvas.getContext("2d");
-
 
   let previousFrame = null;
 
   let sceneChanges = 0;
 
-
   const samples =
     Math.min(
-      30,
+      40,
       Math.max(
         10,
-        Math.floor(duration)
+        Math.floor(duration * 1.5)
       )
     );
 
@@ -848,7 +1686,6 @@ async function detectSceneChanges(video, duration) {
 
     const time =
       (duration / samples) * i;
-
 
     await seekVideo(
       video,
@@ -878,6 +1715,8 @@ async function detectSceneChanges(video, duration) {
 
       let difference = 0;
 
+      let count = 0;
+
 
       for (
         let j = 0;
@@ -891,12 +1730,13 @@ async function detectSceneChanges(video, duration) {
             previousFrame[j]
           );
 
+        count++;
+
       }
 
 
       difference =
-        difference /
-        (frame.length / 16);
+        difference / count;
 
 
       if (difference > 45) {
@@ -919,9 +1759,9 @@ async function detectSceneChanges(video, duration) {
 }
 
 
-/* -----------------------------
-   HELPERS
------------------------------ */
+/* =========================================
+   VIDEO HELPERS
+========================================= */
 
 function waitForVideoMetadata(video) {
 
@@ -948,11 +1788,15 @@ function waitForVideoMetadata(video) {
 }
 
 
-function seekVideo(video, time) {
+function seekVideo(
+  video,
+  time
+) {
 
   return new Promise(function(resolve) {
 
-    video.currentTime = time;
+    video.currentTime =
+      time;
 
     video.addEventListener(
       "seeked",
@@ -965,6 +1809,10 @@ function seekVideo(video, time) {
 }
 
 
+/* =========================================
+   TIME
+========================================= */
+
 function formatTime(seconds) {
 
   const mins =
@@ -972,7 +1820,6 @@ function formatTime(seconds) {
 
   const secs =
     Math.floor(seconds % 60);
-
 
   return (
     mins +
@@ -983,27 +1830,25 @@ function formatTime(seconds) {
 }
 
 
+/* =========================================
+   RATINGS
+========================================= */
+
 function getRating(score) {
 
-  if (score >= 85) {
+  if (score >= 90)
+    return "Excellent";
 
-    return "Excellent 🔥";
+  if (score >= 80)
+    return "Strong";
 
-  }
+  if (score >= 70)
+    return "Good";
 
-  if (score >= 70) {
+  if (score >= 55)
+    return "Needs improvement";
 
-    return "Good 👍";
-
-  }
-
-  if (score >= 55) {
-
-    return "Average";
-
-  }
-
-  return "Needs work";
+  return "Weak";
 
 }
 
